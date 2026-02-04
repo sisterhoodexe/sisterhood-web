@@ -1,4 +1,8 @@
-/* sisterhood.exe — cyber / terminal aesthetic */
+/* ============================================
+   sisterhood.exe — main styles
+   cyber / terminal vibe. we use CSS variables
+   so we can change pink/dark once and it updates everywhere.
+   ============================================ */
 :root {
     --pink: #FF0079;
     --bg-dark: #0B0B0B;
@@ -6,7 +10,7 @@
     --text-gray: rgba(255, 248, 251, 0.85);
     --text-dark-gray: rgba(255, 248, 251, 0.5);
     --border-pink: rgba(255, 0, 121, 0.35);
-    /* Hero title: same pink as section titles (var(--pink)) + glow */
+    /* glow behind the hero title text */
     --hero-title-glow: 0 0 1.2em rgba(255, 0, 121, 0.35), 0 0 2em rgba(255, 0, 121, 0.2);
 }
 
@@ -16,6 +20,7 @@
     box-sizing: border-box;
 }
 
+/* smooth scroll when you click nav links; padding so the section title isn't hidden under the fixed nav */
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 60px;
@@ -31,6 +36,7 @@ body {
     overflow-x: hidden;
 }
 
+/* canvas for the animated background - script.js draws on this. stays behind content (z-index -1) */
 #bg-grid {
     position: fixed;
     top: 0;
@@ -41,7 +47,7 @@ body {
     pointer-events: none;
 }
 
-/* Navigation */
+/* --- Navigation (fixed at top) --- */
 .nav-bar {
     position: fixed;
     top: 0;
@@ -95,21 +101,21 @@ body {
     color: var(--pink);
 }
 
-/* Container */
+/* max width for content so it doesn't stretch forever on big screens */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 4rem 1.5rem;
 }
 
-/* Hero */
+/* --- Hero (big title at top) --- */
 .hero {
     padding-top: 6rem;
     padding-bottom: 5rem;
     text-align: center;
 }
 
-/* Shared hero title: same effect (glitch + glow) on homepage and blog */
+/* base hero title; --home and --blog modifiers change font/size */
 .hero-title {
     font-size: clamp(2rem, 6vw, 3.5rem);
     font-weight: 700;
@@ -119,11 +125,13 @@ body {
     text-shadow: var(--hero-title-glow);
 }
 
+/* homepage: monospaced terminal look */
 .hero-title--home {
     font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
     letter-spacing: 0.12em;
 }
 
+/* blog page: same vibe but smaller and a bit lighter so it's not blocky */
 .hero-title--blog {
     font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Courier New', monospace;
     font-size: clamp(1.35rem, 4vw, 2.25rem);
@@ -131,6 +139,7 @@ body {
     letter-spacing: 0.08em;
 }
 
+/* glitch effect: pseudo-elements copy the title and animate with a slight offset (see keyframes below) */
 .glitch {
     position: relative;
     display: inline-block;
@@ -185,6 +194,7 @@ body {
     margin-bottom: 0.5rem;
 }
 
+/* blinking underscore under the hero tagline */
 .cursor-blink {
     display: inline-block;
     animation: blink 1s step-end infinite;
@@ -195,7 +205,7 @@ body {
     50% { opacity: 0; }
 }
 
-/* Section titles */
+/* the [SECTION] label_here style titles for each section */
 .section-title {
     font-size: 0.95rem;
     font-weight: 500;
@@ -206,7 +216,7 @@ body {
     text-align: center;
 }
 
-/* Content box */
+/* card-style boxes that hold mission, join, form, contact, etc. */
 .content-box {
     background: rgba(10, 10, 10, 0.6);
     border: 1px solid var(--border-pink);
@@ -240,14 +250,14 @@ body {
     margin-bottom: 0;
 }
 
-/* Join section: center button */
+/* "get started" button centered under the join text */
 .join .cta-button {
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* Buttons */
+/* all our buttons: transparent pink border + pink text, fill pink on hover */
 .cta-button {
     display: inline-block;
     padding: 0.85rem 1.75rem;
@@ -270,7 +280,7 @@ body {
 }
 
 
-/* Message section */
+/* contact form section - form layout and input styling */
 .message-section .content-box {
     max-width: 700px;
 }
@@ -353,7 +363,7 @@ body {
     color: #e06c6c;
 }
 
-/* What We Do Section */
+/* --- Services (the 4 cards: Cyber Safety, Anti-Cyberbullying, Education, Community) --- */
 .what-we-do {
     background: var(--bg-dark);
 }
@@ -419,7 +429,7 @@ body {
     }
 }
 
-/* Info section — dainty, cute */
+/* info section: the soft box with the representation paragraph + source + "Curious for more?" - we wanted it to feel dainty/cute */
 .info-box {
     border-radius: 12px;
     border: 1px solid rgba(255, 0, 121, 0.2);
@@ -460,6 +470,7 @@ body {
     text-decoration: underline;
 }
 
+/* small delicate "source" link (not the big cta-button) */
 .info-source-btn {
     display: inline-block;
     margin-top: 0.5rem;
@@ -490,7 +501,7 @@ body {
     font-size: 0.88rem;
 }
 
-/* Blog section */
+/* --- Blog (Field Notes page): card grid + expandable read more --- */
 .blog-section {
     background: var(--bg-dark);
 }
@@ -550,7 +561,7 @@ body {
     margin-bottom: 0;
 }
 
-/* Expandable card: preview (2–4 lines) + read more */
+/* short preview text; when expanded we hide it and show .blog-card-full */
 .blog-card-preview {
     font-size: 0.95rem;
     line-height: 1.8;
@@ -562,6 +573,7 @@ body {
     display: none;
 }
 
+/* the "read more" content is in here; JS sets max-height so it animates open/closed */
 .blog-card-expandable {
     overflow: hidden;
     max-height: 0;
@@ -569,7 +581,7 @@ body {
 }
 
 .blog-card-expandable.is-open {
-    /* max-height set by JS for smooth transition */
+    /* max-height is set by script.js for smooth expand/collapse */
 }
 
 .blog-card-full {
@@ -634,7 +646,7 @@ body {
     }
 }
 
-/* Contact */
+/* --- Contact (email, discord, github) --- */
 .contact-info {
     font-size: 1rem;
 }
@@ -652,7 +664,7 @@ body {
     margin-right: 0.5rem;
 }
 
-/* Footer */
+/* --- Footer (same on index + blog) --- */
 .footer {
     padding: 2rem 1.5rem;
     border-top: 1px solid var(--border-pink);

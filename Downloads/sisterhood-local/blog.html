@@ -7,12 +7,13 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- we use both JetBrains Mono and Fira Code here for the blog title + body -->
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <canvas id="bg-grid"></canvas>
 
-    <!-- Navigation -->
+    <!-- same nav as homepage but links go to index.html#section so we don't lose the homepage -->
     <nav class="nav-bar" role="navigation">
         <div class="nav-container">
             <a href="index.html" class="nav-logo">sisterhood.exe</a>
@@ -28,7 +29,7 @@
         </div>
     </nav>
 
-    <!-- Blog page header -->
+    <!-- blog hero: smaller title "Field Notes", same glitch + cursor. class hero--blog / hero-title--blog = different font/size in CSS -->
     <section class="hero hero--blog">
         <div class="container">
             <h1 class="hero-title hero-title--blog">
@@ -39,7 +40,7 @@
         </div>
     </section>
 
-    <!-- Full blog content -->
+    <!-- each article is a card with preview + expandable "read more" (script.js toggles it). add more articles by copying a full article block -->
     <section class="blog-section blog-section--page">
         <div class="container">
             <div class="blog-grid">
@@ -47,6 +48,7 @@
                     <p class="blog-meta">privacy · 2026-01-15</p>
                     <h2 class="blog-title">Why Signal (and encrypted messaging) matters</h2>
                     <p class="blog-card-preview">End-to-end encryption keeps your conversations between you and the people you talk to—not visible to companies or governments.</p>
+                    <!-- id links to the "read more" button's aria-controls so expand/collapse works -->
                     <div class="blog-card-expandable" id="blog-expand-signal" role="region" aria-label="Full post: Why Signal matters">
                         <div class="blog-card-full">
                             <p class="blog-excerpt">End-to-end encryption keeps your conversations between you and the people you talk to—not visible to companies or governments. Here's a quick rundown of why we recommend Signal and how to get started. Signal is free, open-source, and doesn't sell your data. You can use it for one-to-one chats and group conversations, and it works on phone and desktop.</p>
@@ -80,7 +82,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- same footer as index + back to home link -->
     <footer class="footer">
         <div class="container">
             <p class="footer-text">> sisterhood.exe | 2026 | built with &lt;3</p>

@@ -1,15 +1,20 @@
-// Smooth scroll behavior
+// sisterhood.exe — main JS
+// Handles: background canvas animation, contact form (Formspree), join button scroll, GitHub link, blog read more/less, fade-in on scroll, hero tagline typing.
+// Everything runs after the page is loaded so we're not trying to grab elements that don't exist yet.
 document.addEventListener('DOMContentLoaded', function() {
-    // Background network effect (2D, cyber / system visualization)
+
+    // ========== Background animation (the moving dots, lines, stars behind the page) ==========
+    // We draw on a canvas so it's one layer - no need to animate a ton of DOM elements
     const bgCanvas = document.getElementById('bg-grid');
     if (bgCanvas) {
         const ctx = bgCanvas.getContext('2d');
 
-        const nodes = [];
-        const orbitRings = [];
-        const shapes = [];
-        const stars = [];
+        const nodes = [];      // floating points that get connected with lines
+        const orbitRings = []; // the oval rings
+        const shapes = [];     // little triangles/squares/hexagons
+        const stars = [];      // twinkly stars
 
+        // When the window resizes we need to redraw everything at the new size and regenerate positions
         const resizeBg = () => {
             bgCanvas.width = window.innerWidth;
             bgCanvas.height = window.innerHeight;
@@ -22,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
             shapes.length = 0;
             stars.length = 0;
 
-            // Constellation stars with depth
+            // How many of each thing we draw - scales with screen size so it doesn't look empty on big monitors
             const starCount = Math.floor((w * h) / 14000);
             for (let i = 0; i < starCount; i++) {
                 stars.push({
@@ -74,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resizeBg();
         window.addEventListener('resize', resizeBg);
 
+        // t = time-ish, we increment it each frame so animations (twinkle, rotation, etc.) move
         let t = 0;
         const drawSystem = () => {
             const w = bgCanvas.width;
@@ -191,19 +197,21 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             t += 0.5;
-            requestAnimationFrame(drawSystem);
+            requestAnimationFrame(drawSystem); // loop: draw again next frame
         };
 
         drawSystem();
     }
 
-    // Send message form: submit via Formspree and show success/error on page
+    // ========== Contact form (send message) ==========
+    // Formspree receives the form and emails us. We just POST to their URL and show success/error here.
     const messageForm = document.getElementById('messageForm');
     const formStatus = document.getElementById('formStatus');
-    if (messageForm && formStatus) {
+        if (messageForm && formStatus) {
         messageForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+            e.preventDefault(); // don't do the default form submit, we're doing it with fetch
             const action = messageForm.getAttribute('action');
+            // If you haven't replaced YOUR_FORM_ID in index.html yet, we show a friendly error instead of sending to a broken URL
             if (action && action.includes('YOUR_FORM_ID')) {
                 formStatus.className = 'form-status form-status--error';
                 formStatus.textContent = '> config_required: Replace YOUR_FORM_ID in index.html with your Formspree form ID from formspree.io';
@@ -243,7 +251,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Join button
+    // ========== Join button ==========
+    // "get started" just smooth-scrolls down to the contact section so people can reach out
     const joinButton = document.getElementById('joinButton');
     if (joinButton) {
         joinButton.addEventListener('click', function() {
@@ -251,12 +260,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (contactSection) {
                 contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
+            // little press animation
             joinButton.style.transform = 'scale(0.95)';
             setTimeout(() => { joinButton.style.transform = 'scale(1)'; }, 150);
         });
     }
 
-    // GitHub link placeholder
+    // GitHub link: right now it's # so we prevent going nowhere and show an alert. When we have a real repo URL, change the href in index.html and you can remove this listener (or make it open in new tab).
     const githubLink = document.getElementById('githubLink');
     if (githubLink) {
         githubLink.addEventListener('click', function(e) {
@@ -265,14 +275,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Blog card expand/collapse (Read more / Read less)
+    // ========== Blog "Read more" / "Read less" ==========
+    // Each card has a button with aria-controls pointing to the expandable region's id. We toggle max-height so the open/close animates nicely.
     (function initBlogExpandable() {
         var buttons = document.querySelectorAll('.blog-read-more-btn');
         var expandedLabel = '> read less';
         var collapsedLabel = '> read more';
 
         function expand(btn, region, card) {
-            region.style.maxHeight = region.scrollHeight + 'px';
+            region.style.maxHeight = region.scrollHeight + 'px'; // use actual content height so transition works
             region.classList.add('is-open');
             card.classList.add('is-expanded');
             btn.setAttribute('aria-expanded', 'true');
@@ -280,13 +291,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function collapse(btn, region, card) {
-            region.style.maxHeight = region.scrollHeight + 'px';
+            region.style.maxHeight = region.scrollHeight + 'px'; // set to current height first so transition to 0 is smooth
             requestAnimationFrame(function() {
                 region.style.maxHeight = '0';
                 card.classList.remove('is-expanded');
                 btn.setAttribute('aria-expanded', 'false');
                 btn.textContent = collapsedLabel;
             });
+            // After the transition ends we clear max-height so if the card content changes it can grow/shrink
             region.addEventListener('transitionend', function clearAfterCollapse() {
                 region.removeEventListener('transitionend', clearAfterCollapse);
                 region.style.maxHeight = '';
@@ -312,7 +324,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     })();
 
-    // Fade-in on scroll
+    // ========== Fade-in on scroll ==========
+    // When service cards, content boxes, or blog cards scroll into view we fade them in and slide them up a bit. Makes the page feel less static.
     const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
@@ -330,7 +343,8 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(el);
     });
 
-    // Tagline typing effect
+    // ========== Hero tagline typing effect ==========
+    // The line under the big title ("building safer digital spaces...") types out character by character. Only runs on the hero that has .hero-tagline (homepage or blog).
     const tagline = document.querySelector('.hero-tagline');
     if (tagline) {
         const originalText = tagline.textContent;
