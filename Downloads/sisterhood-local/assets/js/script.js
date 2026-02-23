@@ -313,14 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // GitHub link: right now it's # so we prevent going nowhere and show an alert. When we have a real repo URL, change the href in index.html and you can remove this listener (or make it open in new tab).
-    const githubLink = document.getElementById('githubLink');
-    if (githubLink) {
-        githubLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('GitHub link - update with your actual GitHub URL');
-        });
-    }
+    // GitHub link is now live: https://github.com/sisterhoodexe (no JS needed, it's a regular link in index.html)
 
     // ========== Blog "Read more" / "Read less" ==========
     // Each card has a button with aria-controls pointing to the expandable region's id. We toggle max-height so the open/close animates nicely.
@@ -410,4 +403,62 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 50);
         }, 500);
     }
+
+    // ========== Cursor trail ==========
+    // Pink glowing dots that trail behind the cursor. Each dot follows the one ahead of it (not the cursor), so the trail stays spread out and doesn't collapse to one point.
+    (function initCursorTrail() {
+        const trailLength = 12;
+        const trail = [];
+        let mouseX = -100;
+        let mouseY = -100;
+
+        // Create trail elements, each with its own position
+        for (let i = 0; i < trailLength; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'cursor-trail';
+            dot.style.opacity = '0';
+            document.body.appendChild(dot);
+            trail.push({ el: dot, x: -100, y: -100 });
+        }
+
+        // Track mouse position
+        document.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Animate: first dot follows cursor, each other dot follows the one ahead of it
+        function animateTrail() {
+            // First dot eases toward cursor
+            trail[0].x += (mouseX - trail[0].x) * 0.25;
+            trail[0].y += (mouseY - trail[0].y) * 0.25;
+
+            // Each subsequent dot follows the one before it (not the cursor)
+            for (let i = 1; i < trailLength; i++) {
+                const prev = trail[i - 1];
+                const dot = trail[i];
+                
+                // Slower easing for dots further back = more spread out trail
+                const ease = 0.2 - (i * 0.01);
+                dot.x += (prev.x - dot.x) * ease;
+                dot.y += (prev.y - dot.y) * ease;
+            }
+
+            // Update positions and styles
+            trail.forEach((dot, index) => {
+                dot.el.style.left = dot.x - 4 + 'px';
+                dot.el.style.top = dot.y - 4 + 'px';
+
+                // Fade and shrink further back
+                const scale = 1 - (index / trailLength) * 0.6;
+                const opacity = 0.7 - (index / trailLength) * 0.6;
+                dot.el.style.transform = 'scale(' + scale + ')';
+                dot.el.style.opacity = opacity;
+            });
+
+            requestAnimationFrame(animateTrail);
+        }
+
+        animateTrail();
+    })();
 });
