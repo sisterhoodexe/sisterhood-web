@@ -2,6 +2,53 @@
 // Handles: background canvas animation, contact form (Formspree), join button scroll, GitHub link, blog read more/less, fade-in on scroll, hero tagline typing.
 // Everything runs after the page is loaded so we're not trying to grab elements that don't exist yet.
 document.addEventListener('DOMContentLoaded', function() {
+// ========== Mobile nav toggle ==========
+(function initNavToggle() {
+    const toggle = document.querySelector('.nav-toggle');
+    const menu = document.getElementById('navMenu');
+    if (!toggle || !menu) return;
+
+    function openMenu() {
+        menu.classList.add('is-open');
+        toggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeMenu() {
+        menu.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function isOpen() {
+        return toggle.getAttribute('aria-expanded') === 'true';
+    }
+
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isOpen()) closeMenu();
+        else openMenu();
+    });
+
+    // close menu after clicking a link (on mobile)
+    menu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+            if (window.matchMedia('(max-width: 900px)').matches) {
+                closeMenu();
+            }
+        });
+    });
+
+    // close when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!isOpen()) return;
+        const clickedInsideNav = e.target.closest('.nav-bar');
+        if (!clickedInsideNav) closeMenu();
+    });
+
+    // close on esc key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen()) closeMenu();
+    });
+})();
 
     // ========== Background animation (the moving dots, lines, stars behind the page) ==========
     // We draw on a canvas so it's one layer - no need to animate a ton of DOM elements
