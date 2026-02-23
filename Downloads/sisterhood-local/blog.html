@@ -4,31 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog | sisterhood.exe | Tech Updates &amp; Guides</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- we use both JetBrains Mono and Fira Code here for the blog title + body -->
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <canvas id="bg-grid"></canvas>
 
     <!-- same nav as homepage but links go to index.html#section so we don't lose the homepage -->
     <nav class="nav-bar" role="navigation">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">sisterhood.exe</a>
-            <ul class="nav-links">
+    <a href="index.html" class="nav-logo">sisterhood.exe</a>
+
+    <button class="nav-toggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
+      <span class="sr-only">Toggle menu</span> <!-- mobile-friendly navbar (hamburger toggle)-->
+      <span class="nav-toggle__icon"></span>
+    </button>
+
+    <ul id="navMenu" class="nav-links" data-collapsible>
                 <li><a href="index.html#mission" class="nav-link">> mission</a></li>
                 <li><a href="index.html#services" class="nav-link">> services</a></li>
                 <li><a href="index.html#info" class="nav-link">> info</a></li>
-                <li><a href="blog.html" class="nav-link nav-link--active">> blog</a></li>
+                <li><a href="blog.html" class="nav-link nav-link--active" aria-current="page">> blog</a></li>
                 <li><a href="index.html#join" class="nav-link">> join</a></li>
                 <li><a href="index.html#message" class="nav-link">> message</a></li>
                 <li><a href="index.html#contact" class="nav-link">> contact</a></li>
             </ul>
         </div>
     </nav>
-
+<main id="main">
     <!-- blog hero: smaller title "Field Notes", same glitch + cursor. class hero--blog / hero-title--blog = different font/size in CSS -->
     <section class="hero hero--blog">
         <div class="container">
@@ -80,7 +88,7 @@
                 </article>
             </div>
         </div>
-    </section>
+    </section> </main>
 
     <!-- same footer as index + back to home link -->
     <footer class="footer">
@@ -90,6 +98,9 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+<script src="assets/js/bg-canvas.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/blog.js"></script>
+
 </body>
 </html>
