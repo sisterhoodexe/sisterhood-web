@@ -1,0 +1,7 @@
+*
+!.gitignore
+!index.html
+!blog.html
+!favicon.svg
+!assets/
+!assets/**
